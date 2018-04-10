@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include<iomanip> //accurate decimal
 
 using namespace std;
 
