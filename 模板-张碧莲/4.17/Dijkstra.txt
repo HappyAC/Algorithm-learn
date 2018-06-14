@@ -1,0 +1,44 @@
+int MinVertex() 
+{	
+	int k = -1;
+	double min=INT_MAX;
+	for (int i = 0;  i<n; i++) 
+	{	
+		if (dist[i] < min && visited[i]==false)
+		{
+			min=dist[i];
+			k = i;
+		}
+	}
+	return k;
+}
+
+void Dijkstra(int v)
+{// 求顶点v出发的单源最短路径
+	// 辅助数组初始化
+	int i;
+	fill(visited, visited+n, false);
+	fill(dist,dist+n,INT_MAX);
+	fill(adjvex,adjvex+n,-1);
+	for(i=0; i<n; i++) 
+	{
+		dist[i] = mat[v][i];  
+		adjvex[i] = v; 
+	}
+	visited[v] = true;       		// 顶点v放到已访问集合S
+	for(i=1; i<=n-1; i++)
+	{   		// 循环vexnum-1轮
+		int k = MinVertex();  			// 参见Prim算法
+		if(k==-1) return;
+		visited[k] = true;			// 顶点k加入集合S
+		for (int w=0; w<n; w++) 
+		{
+			//调整数组dist和adjvex
+			if (dist[w] > dist[k] + mat[k][w] && visited[w]==false && mat[k][w]!=INT_MAX) 
+			{
+				dist[w] = dist[k] + mat[k][w];
+				adjvex[w] = k;
+			}
+		}
+	}	
+}

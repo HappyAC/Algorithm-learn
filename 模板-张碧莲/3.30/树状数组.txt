@@ -1,0 +1,101 @@
+#include<iostream>
+#include<cstdio>
+#include<climits>
+#include<algorithm>
+using namespace std;
+
+const int N=100002; // X可能等于32000,X+1就可能等于32001
+
+int C[N+1];	//树状数组
+int level[N]; 
+int get(int k) {
+    int cnt=0,sum=0;
+    for (int i=20;i>=0;i--) {
+        sum+=(1<<i);
+        if(sum>=N||cnt+C[sum]>=k)
+            sum-=(1<<i);
+        else cnt+=C[sum];
+    }
+    return sum+1;
+}
+int lowBit(int x)  // 求最小幂2^k, 
+{
+    return x & (x ^ (x - 1));	// x And ( x Xor (x-1) )
+}
+
+void modify(int pos, int k) //A[pos] += k
+{ 
+    while (pos <= N)  
+	{
+        C[pos] += k;
+        pos += lowBit(pos);  // 父节点下标 pos+2^k
+    }
+}
+
+int sum(int pos) //return sum(1..pos)
+{    
+    int ret = 0;
+    while (pos > 0) 
+	{
+        ret += C[pos];
+        pos -= lowBit(pos);	
+    }
+    return ret;
+}
+
+struct city
+{
+	int x,y,num;
+}c[N];
+
+int f[N];
+
+bool cmp(const city &a,const city &b)
+{
+	return (a.y>b.y ||( a.y==b.y && a.x>b.x));
+}
+
+bool run()
+{	
+	int n,i,m;
+    if(scanf("%d%d", &n, &m)==EOF) return false;
+
+	fill(C+1,C+N+2,0);
+	fill(level,level+N+1,0);
+    for(i=0; i<n; i++) 
+	{
+        scanf("%d%d", &c[i].x, &c[i].y);
+		c[i].num=i+1;
+		c[i].x++;		// X可能等于0
+    }
+	sort(c,c+n,cmp);
+	for(i=0;i<n;i++)
+	{
+		int t;
+		if(i>0)
+		{
+			if(c[i].y==c[i-1].y && c[i].x==c[i-1].x) 
+			{
+				f[c[i].num]=t;
+				modify(c[i].x+1,1);
+				continue;
+			}
+		}
+		f[c[i].num]=sum(c[i].x);
+		t=f[c[i].num];
+		modify(c[i].x+1,1);	// 第x位置，A[pos]增加1
+	}
+	for(i=0;i<m;i++) 
+	{
+		int p;
+		cin>>p;
+		cout<<f[p]<<endl;
+	}
+	return true;
+}
+
+int main()
+{
+	while(run());
+	return 0;
+}

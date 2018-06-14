@@ -1,0 +1,43 @@
+/* int split(int n, int m);其中n为要划分的正整数，m是划分中的最大加数(当m > n时，最大加数为n)，
+	(1) m > n
+    在整数划分中实际上最大加数不能大于n，因此在这种情况可以等价为split(n, n);
+    可用程序表示为if(m > n) return split(n, n);    
+    (2) m = n
+    这种情况可用递归表示为split(n, m - 1) + 1，从以上例子中可以看出，就是最大加
+    数为6和小于6的划分之和
+    用程序表示为if(m == n) return (split(n, m - 1) + 1);
+    (3) m < n
+    从上例可以看出，设m = 4，那split(6, 4)的值是最大加数小于4划分数和整数2的划分数的和。
+    因此，split(n, m)可表示为split(n, m - 1) + split(n - m, m)
+	*/
+#include<stdio.h>
+__int64 dp[121][121];
+int main()
+{
+	__int64 i,j,k,n,m;
+	for(i=0;i<=120;i++)
+		for(j=0;j<=120;j++)
+			dp[i][j]=0;
+	for(i=1;i<=120;i++)
+	{
+		dp[i][1]=1;
+		dp[1][i]=1;
+	}
+	for(i=1;i<=120;i++)
+	{
+		for(j=1;j<=120;j++)
+		{
+			if(i<j)
+				dp[i][j]=dp[i][i];
+			else if(i>j)
+				dp[i][j]=dp[i-j][j]+dp[i][j-1];
+			else if(i==j)
+				dp[i][j]=1+dp[i][j-1];
+		}
+	}
+	while(scanf("%I64d",&n)>0)
+	{
+		printf("%I64d\n",dp[n][n]);
+	}
+	return 0;
+}

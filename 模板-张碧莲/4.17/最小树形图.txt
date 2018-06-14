@@ -1,0 +1,59 @@
+int zhuliu(int root,int nv)
+{
+	int in[N],id[N],pre[N],vis[N];
+	int ans=0;
+	nv++;
+	while(1)
+	{
+		for(int i=0;i<nv;i++) in[i]=INF,id[i]=-1,vis[i]=-1;
+		
+		for(int i=0;i<cnt;i++)
+		{
+			int u,v;
+			u=edge[i].u;
+			v=edge[i].v;
+			if(u==v||edge[i].w>in[v]) continue;
+			in[v]=edge[i].w;
+			pre[v]=u;
+		}
+		in[root]=0;
+		pre[root]=root;
+		for(int i=0;i<nv;i++)
+		{
+			ans+=in[i];
+			if(in[i]==INF)
+				return -1;
+		}
+		int MXid=0;
+		for(int i=0;i<nv;i++)
+			if(vis[i]==-1)
+			{
+				int t=i;
+				while(vis[t]==-1)
+				{
+					vis[t]=i;
+					t=pre[t];
+				}
+				if(vis[t]!=i||t==root) continue;
+				for(int k=pre[t];k!=t;k=pre[k])
+					id[k]=MXid;
+				id[t]=MXid++;
+			}
+			if(MXid==0) break;
+			for(int i=0;i<nv;i++)
+				if(id[i]==-1)
+					id[i]=MXid++;
+				for(int i=0;i<cnt;i++)
+				{
+					int u,v;
+					u=edge[i].u;
+					v=edge[i].v;
+					edge[i].u=id[u];
+					edge[i].v=id[v];
+					edge[i].w-=in[v];
+				}
+				nv=MXid;
+				root=id[root];
+	}
+	return ans;
+}

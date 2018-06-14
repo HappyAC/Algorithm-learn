@@ -1,0 +1,8 @@
+#include<sstream>
+string word[1000],t;
+        stringstream ss(s);
+        while(ss>>t)
+        {
+            word[p]=t;
+            p++;
+        }

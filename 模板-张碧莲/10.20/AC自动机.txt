@@ -1,0 +1,110 @@
+struct trieNode
+{
+	trieNode *fail;
+    trieNode *next[26];
+	int data;
+    trieNode()
+    {
+		data=0;
+        for(int i = 0; i < 26; i++)
+        {
+            next[i] = NULL;
+        }
+    }
+};
+trieNode *Root;
+
+void insertString(string str)
+{
+    trieNode *pt = Root;
+	pt->fail=Root;
+    for (int i = 0; i < str.length(); i ++)
+    {
+        if (pt->next[str[i] - 'a'] == NULL)
+        {		
+            pt->next[str[i] - 'a'] = new trieNode();
+			pt->next[str[i] - 'a']->fail=Root;
+        }
+        pt = pt->next[str[i] - 'a'];
+    }
+	pt->data+=1;
+}
+
+void deleteTree(trieNode *root)
+{
+    for (int i = 0; i < 26; i ++) {
+        if (root->next[i] != NULL) {
+            deleteTree(root->next[i]);
+        }
+    }
+    free(root);
+}
+int search(string str)
+{
+    trieNode *pt = Root;
+	trieNode *temp;
+    int i = 0;
+	int cnt=0;
+    for (i = 0; i < str.length(); i ++)
+    {
+		while(pt->next[str[i] - 'a']==NULL && pt!=Root) pt=pt->fail;
+		pt=(pt->next[str[i] - 'a']==NULL)?Root:pt->next[str[i] - 'a'];
+		temp=pt;
+        while(temp!=Root)
+		{
+			cnt+=temp->data;
+			temp->data=0;
+			temp=temp->fail;
+		}
+    }
+    return cnt;
+}  
+
+trieNode *getfail(trieNode *p,int k)
+{  
+     if (p->next[k]!=NULL) return p->next[k];  
+     else   
+          if (p==Root) return Root;  
+          else return getfail(p->fail,k);  
+} 
+
+void trieBFS()
+{
+    queue<trieNode*>Q;
+    trieNode *pt = Root;
+    Q.push(pt);
+    while(!Q.empty())
+    {
+        trieNode *curr=Q.front();
+        Q.pop();
+        for(int i=0;i<26;i++)
+        {
+            if(curr->next[i]!=NULL)
+            {
+                //M[curr->num][curr->next[i]->num]++;
+                Q.push(curr->next[i]);
+                if(curr==pt) curr->next[i]->fail=pt;
+                else 
+                {
+                    curr->next[i]->fail=getfail(curr->fail,i);
+                  /*  if(curr->next[i]->fail->data==1 && curr->next[i]->data==0)
+                    {
+                        curr->next[i]->data=1;
+                        virus.push_back(curr->next[i]->num);
+                    }*/
+                }
+            }
+        /*    else
+            {
+                trieNode *t=curr;
+                while(true) 
+                {
+                    t=t->fail;
+                    if(t->next[i]!=NULL || t==Root) break;
+                }
+                if(t->next[i]==NULL) M[curr->num][0]++;
+                else M[curr->num][t->next[i]->num]++;
+            }*/
+        }
+    }
+}

@@ -1,0 +1,127 @@
+const int N = 100010;//点数
+const int M = 100010;//询问次数
+
+int head[N],__head[N];
+struct edge{
+    int u,v,w,next;
+}e[2*N];
+struct ask{
+    int u,v,lca,next;
+}ea[2*M];
+stack<int> st;
+int  fa[N];
+__int64 dir[N],dis1[N],dis2[N],cnt[N];
+bool vis[N];
+
+inline void add_edge(int u,int v,int w,int &k) //无向图重复存储边
+{
+    e[k].u = u; e[k].v = v; e[k].w = w;
+    e[k].next = head[u]; head[u] = k++;
+    e[k].u = v; e[k].v = u; e[k].w = w;
+    e[k].next = head[v]; head[v] = k++;
+}
+inline void add_ask(int u ,int v ,int &k) //重复存储ask
+{
+    ea[k].u = u; ea[k].v = v; ea[k].lca = -1;
+    ea[k].next = __head[u]; __head[u] = k++;
+    ea[k].u = v; ea[k].v = u; ea[k].lca = -1;
+    ea[k].next = __head[v]; __head[v] = k++;
+}
+
+int Find(int x)
+{
+    //路径压缩
+    if (fa[x] == x) return x;
+    return fa[x] = Find(fa[x]);
+}
+void Tarjan()    // Tarjan非递归算法 
+{
+	int k;
+	st.push(1);
+	while(true)
+	{
+		int u = st.top();
+		vis[u] = true;
+		fa[u] = u;
+		bool flag = false;
+		for(k=head[u]; k!=-1; k=e[k].next)
+		{
+			if( !vis[e[k].v] )
+			{
+				int v = e[k].v , w = e[k].w;
+				cnt[v] = cnt[u] + 1;
+				dir[v] = dir[u] + (__int64)w;
+				dis1[v] = dis1[u] + (__int64)w*cnt[v];
+				dis2[v] = dis2[u] + dir[v];
+				flag = true;
+				st.push(v);
+				break;
+			}
+		}
+		if(flag) continue;
+		for(k=__head[u]; k!=-1; k=ea[k].next)
+		{
+			if( vis[ea[k].v] )
+			{
+				int v = ea[k].v;
+				ea[k].lca = ea[k^1].lca = Find(v);   //ask有两份都需要更新
+			}
+       		 }
+		st.pop();
+		if(st.empty()) break;
+		int pre = st.top();
+		fa[u] = pre;
+	}
+}
+/*void Union(int u ,int v)
+{
+    fa[v] = fa[Find(u)];  
+}
+
+void Tarjan(int u,int dep)
+{
+    vis[u] = true;
+    ance[u] = fa[u] = u; //课写为 ance[Find(u)] = fa[u] = u;
+    for(int k=head[u]; k!=-1; k=e[k].next)
+        if( !vis[e[k].v] )
+        {
+            int v = e[k].v , w = e[k].w;
+            dir[v] = dir[u] + w;
+			dis1[v]=dis1[u]+(__int64)w*(dep+1);
+			dis2[v]=dis2[u]+dir[u]+w;
+			cnt[v]=cnt[u]+1;
+            Tarjan(v,dep+1);
+            Union(u,v);
+            //ance[Find(u)] = u;  //可写为ance[u] = u;  //甚至不要这个语句都行
+        }
+    for(int k=__head[u]; k!=-1; k=ea[k].next)
+        if( vis[ea[k].v] )
+        {
+            int v = ea[k].v;
+            ea[k].lca = ea[k^1].lca = ance[Find(v)];
+        }
+}*/
+
+int main()
+{
+    int cas,n,q,tot;
+    scanf("%d",&cas);
+    while(cas--)
+    {
+        scanf("%d%d",&n,&q);
+        memset(head,-1,sizeof(head));
+        memset(__head,-1,sizeof(__head));
+        tot = 0;
+        for(int i=1; i<n; i++)
+        {
+            int u,v,w;
+            scanf("%d%d%d",&u,&v,&w);
+            add_edge(u,v,w,tot);
+        }
+        tot = 0;
+        memset(vis,0,sizeof(vis));
+        dir[1] = 0;
+        Tarjan(1);
+    }
+    return 0;
+}

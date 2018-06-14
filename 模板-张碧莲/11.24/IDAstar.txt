@@ -1,0 +1,43 @@
+int getnum()
+{
+	num[1]=num[2]=num[3]=0;
+	for(int i=2;i<=4;i++) num[mat[2][i]]++,num[mat[4][i]]++;
+	num[mat[3][2]]++,num[mat[3][4]]++;
+	return MAX(num[1],num[2],num[3]);
+}
+
+int IDAstar(int cnt,int h,int maxH)
+{
+	if(flag) return h;
+	if(cnt+h>maxH) return cnt+h;
+	if(h==0)
+	{
+		for(int i=0;i<cnt;i++) printf("%c",path[i]);
+		printf("\n%d\n",mat[2][2]);
+		flag=true;
+		return h;
+	}
+	int minV=INT_MAX;
+	for(int i=0;i<8;i++)
+	{
+		path[cnt]='A'+i;
+		change(i,1);
+		int hh=8-getnum();
+		minV=MIN(minV,IDAstar(cnt+1,hh,maxH));
+		change(i,0);
+	}
+	return minV;
+}
+
+void run()
+{
+	int maxV=getnum();
+	int maxH=8-maxV;
+	flag=false;
+	while(1)
+	{
+		if(flag) break;
+		int ans=IDAstar(0,8-maxV,maxH);
+		maxH=ans;
+	}
+}

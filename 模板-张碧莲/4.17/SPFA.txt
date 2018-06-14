@@ -1,0 +1,27 @@
+bool SPFA(int s) 
+{	// SPFA的实现和BFS非常相似
+	int times[M];	 fill(times, times+n+1, 0);  // 表示每个顶点的入队次数
+	fill(visited, visited+n+1, false); // visited表示是否已在队列 
+	fill(dist,dist+n+1,INT_MAX);	dist[s] = 0;	
+	queue<int> Q; Q.push(s); visited[s] = true;// 顶点s标记为入队
+	while(Q.empty()==false) 
+	{
+		int u = Q.front(); Q.pop(); visited[u] = false;
+		for(int v=1; v<=n; v++)
+		{ // 检查u的每个邻接
+			if (mat[u][v]!=INT_MAX && dist[v] > dist[u]+mat[u][v]) 
+			{
+				dist[v] = dist[u]+mat[u][v];
+				if(visited[v]==false){Q.push(v); visited[v]=true; times[v]++;
+					if (times[v]==n) return false;//入队次数超过n-1 ,有负环
+				}
+			}
+		}
+	}
+	for(int i=1;i<=n;i++)
+	{
+		ans[s][i]=dist[i];
+		ans[i][s]=dist[i];
+	}
+	return true;// 无负环
+}

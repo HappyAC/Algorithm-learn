@@ -1,0 +1,49 @@
+
+void connect(int x,int y)
+{
+    while(x!=father[x])
+        x=father[x];
+    while(y!=father[y])
+        y=father[y];
+    if(x!=y)
+        father[x]=y;
+}
+
+struct Edge
+{
+	int from, to;
+	double weight;
+	bool used; //表示是否采用
+} edges[M];
+
+bool place(Edge a)
+{
+	int x=a.from,y=a.to;
+	while(x!=father[x])
+	{
+		x=father[x];
+	}
+	while(y!=father[y])
+	{
+		y=father[y];
+	}
+	if(x==y) return false;
+	return true;
+}
+
+void Kruskal()
+{
+	for(int j=0;j<n;j++) father[j]=j;
+	int k = 0;    // k 统计选中的边数
+	for( int i=0; i<m && k<n-1; i++)
+	{
+		if (place(edges[i]))
+		{
+			edges[i].used=true;
+			k++;
+			sum+=edges[i].weight;
+			connect(edges[i].from,edges[i].to);
+		}
+		else edges[i].used=false;
+	}
+}

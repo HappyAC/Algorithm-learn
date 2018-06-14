@@ -1,0 +1,80 @@
+int siz[N],dep[N],top[N],fa[N],son[N],w[N],num[N];
+
+bool vis[N];
+
+void dfs1(int u,int deep)
+{
+	dep[u]=deep;
+	vis[u]=1;
+	siz[u]=1;
+	son[u]=-1;
+	int maxV=-1;
+	for(int i=0;i<e[u].size();i++)
+	{
+		int v=e[u][i];
+		if(vis[v]) continue;
+		dfs1(v,deep+1);
+		fa[v]=u;
+		siz[u]+=siz[v];
+		if(siz[v]>maxV)
+		{
+			maxV=siz[v];
+			son[u]=v;
+		}
+	}
+
+}
+int cnt;
+void dfs2(int u)
+{
+	w[u]=++cnt;
+	num[cnt]=u;
+	vis[u]=1;
+	if(son[u]!=-1)
+	{
+		top[son[u]]=top[u];
+		dfs2(son[u]);
+	}
+	for(int i=0;i<e[u].size();i++)
+	{
+		int v=e[u][i];
+		if(vis[v]) continue;
+		top[v]=v;
+		dfs2(v);
+	}
+}
+
+void HeavyLight()
+{
+	fill(vis,vis+n+1,0);
+	fa[1]=0;
+	dep[0]=0,top[0]=0;
+	dfs1(1,1);
+	fill(vis,vis+n+1,0);
+	top[1]=1;
+	cnt=0;
+	dfs2(1);
+}
+
+void Add(int u,int v,int val)
+{
+	//if(u==v) return;
+	int f1=top[u],f2=top[v];
+	if(f1 == f2)
+	{
+		if(w[u]<=w[v])
+			insert(1,w[u],w[v],val);
+		else
+			insert(1,w[v],w[u],val);
+	}
+	else if(dep[f1]>=dep[f2])
+	{
+		insert(1,w[f1],w[u],val);
+		Add(fa[f1],v,val);
+	}
+	else
+	{
+		insert(1,w[f2],w[v],val);
+		Add(u,fa[f2],val);
+	}
+}

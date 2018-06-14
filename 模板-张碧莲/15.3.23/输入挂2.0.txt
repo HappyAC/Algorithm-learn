@@ -1,0 +1,8 @@
+inline int read()
+{
+    char ch;
+    for (ch=getchar();ch<48||ch>57;) ch=getchar();
+    int d=0;
+    for (;ch>47&&ch<58;ch=getchar()) d=d*10+ch-48;
+    return d;
+}

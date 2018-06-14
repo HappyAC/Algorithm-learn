@@ -1,0 +1,39 @@
+int MinVertex( ) 
+{	
+	int k = -1;
+	double min=INT_MAX;
+	for (int i = 2;  i<=n; i++) 
+	{	
+		if (dist[i] < min && visited[i]==false)
+		{
+			min=dist[i];
+			k = i;
+		}
+	}
+	return k;
+}
+
+void Prim( int u)
+{ //从顶点u出发构造网的最小生成树
+	// 辅助数组初始化
+	int i;
+	for(i=2; i<=n; i++)
+	{
+		dist[i]=mat[u][i];  // adjvex[i]=u;
+	}
+	fill(visited, visited+n+1, false); 
+	visited[u] = true;			      // 初始，U＝{u}
+	for(int v=2; v<=n; v++)
+	{   // 选择vexnum-1个顶点(边)
+		int k=MinVertex( );  // 加入生成树的下一个顶点(k)
+		visited[k] = true;	  // 新节点加入集合U
+		// 调整集合V-U中剩余顶点到集合U的最短距离
+		for (i=2; i<=n; i++)  
+		{	
+			if (visited[i]==false && mat[k][i]<dist[i]) 
+			{
+				dist[i]= mat[k][i]; 	// adjvex[i] = k; 
+			}
+		}
+	}
+}

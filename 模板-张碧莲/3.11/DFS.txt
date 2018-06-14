@@ -1,0 +1,44 @@
+#include<stdio.h>
+#include<iostream>
+using namespace std;
+int g[10001],gg[10001],k,m,w,cnt;
+void DFS(int t)   
+{   
+    if(t>m+1) return;
+	if(cnt==w) return;
+	if(t==m+1)
+	{
+		cnt++;
+		if(cnt==w)
+		{
+			cout<<gg[1];
+			for(int j=2;j<=m;j++) cout<<' '<<gg[j];
+			return ;
+		}
+	}
+    int i;
+    for(i=1;i<=m;i++)
+    {
+        if(g[i]!=0)
+        {
+            gg[t]=g[i];
+            g[i]=0;
+            DFS(t+1);
+            g[i]=i;
+        }
+    }
+}
+int main()
+{
+	int i;
+    while(cin>>m>>w)
+	{
+		if(m==0) break;
+		cnt=0;
+		for(i=1;i<=m;i++)
+			g[i]=i;
+		DFS(1);
+		cout<<endl;
+	}	
+	return 0;
+} 

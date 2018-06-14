@@ -1,0 +1,58 @@
+
+const int M=505;
+int in[M];
+vector <int> Edge[M];
+int n;
+int Stack[M];
+
+bool cmp(int a,int b)
+{
+    return a>b;
+}
+
+void Topological ()
+{
+    int i,cnt=0;
+//    CountInDegree(G,in);     //对各顶点求入度，放入数组in中
+    //入度为零的顶点入栈
+    for ( i=1; i<=n; ++i) 
+    {
+        if (in[i]==0)
+        {
+            Stack[cnt]=i;
+            cnt++;
+        }
+    }
+    //sort(Stack,Stack+cnt);
+    int count=0;           //对输出顶点计数
+    while (cnt!=0) 
+    {
+        sort(Stack,Stack+cnt,cmp);
+        int v=Stack[cnt-1]; 
+        cnt--;
+        count++;  
+        if(count>1) printf(" ");
+        printf("%d",v);
+        for (i = 0; i < Edge[v].size(); i++)  
+        {
+            int w=Edge[v][i];
+            in[w]--;      // 弧头顶点的入度减一
+            if (in[w] == 0)  
+            {
+                Stack[cnt]=w;  //入度为零的顶点入栈
+                cnt++;
+            }
+        }
+    }
+    printf("\n");
+//    if (count<G.vexnum) cout<<“图中有回路”;
+}
+
+void init()
+{
+    for (int i = 0; i <=n; i++)  
+    {  
+        Edge[i].clear(); 
+        in[i]=0;
+    } 
+}

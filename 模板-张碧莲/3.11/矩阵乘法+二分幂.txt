@@ -1,0 +1,33 @@
+void MatMulSquare(int A[N][N], int B[N][N], int size)   
+{   
+	int C[N][N];
+	fill(&C[0][0], &C[N-1][N-1]+1, 0);
+	for(int i=0; i<size; i++) 
+	{
+		for(int j=0; j<size; j++) 
+		{   
+			for(int k=0; k<size; k++)
+			{
+				C[i][j] = (C[i][j]+A[i][k] * B[k][j])%3;   
+			}
+		}   			
+	}
+	memcpy(A, C, N*N*sizeof(int)); //为了方便，此处使用memcpy
+} 
+
+void DivideAndConquer (int mat[N][N], int k, int size)
+{
+	if(k==1) 
+	{
+		memcpy(answer, mat, N*N*sizeof(int)); 
+		return;
+	}
+	 DivideAndConquer (mat, k/2, size); 	
+	if(k%2 == 0){
+		MatMulSquare(answer,answer,size);   
+	}
+	else {   
+		MatMulSquare(answer,answer,size);  
+		MatMulSquare(answer, mat, size);   
+	} 
+} 

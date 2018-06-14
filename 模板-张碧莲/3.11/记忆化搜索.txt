@@ -1,0 +1,22 @@
+#include <cstdio>
+#include <cstring>
+
+int fib[40];
+int n;
+
+int dfs(int n)
+{
+    if (fib[n]) return fib[n];
+    if (n == 0 || n == 1) return fib[n] = 1;
+    return  fib[n] = dfs(n - 1) + dfs(n - 2);
+}
+
+int main()
+{
+    while (scanf("%d",&n)!=EOF)
+    {
+        printf("%d\n",dfs(n));
+    }
+    
+    return 0;
+}

@@ -1,0 +1,57 @@
+#include <cstdio>
+#include <iostream>
+using namespace std;
+
+int lis[1005];
+__int64 sum=0;
+   
+int binarysearch(int left,int right,int number)   
+{   
+    int mid;   
+    while(left<=right)   
+    {   
+        mid=left+(right-left)/2;      
+        if(lis[mid]<number)  left=mid+1;     
+        else    right=mid-1;   
+    }   
+    return right;   
+}   
+
+int main()   
+{      
+    int n,p,i,tot,num,meet;   
+	while(scanf("%d",&p)!=EOF)   
+	{      
+		sum=0;
+		if(p==0) break;
+		scanf("%d",&num);
+		lis[0]=num;   
+		tot=1; 
+		__int64 MAX=num;
+		for(i=1;i<p;i++)   
+		{   
+			sum=0;
+			scanf("%d",&num);   
+			if(num>lis[tot-1])   
+			{
+				lis[tot++]=num; 
+			}//如果num比lis[]末尾数大，则lis[]下标自增，存入num  
+			else if(num<lis[tot-1])               //如果num比lis[]末尾数小，则用二分法找到比num大的最小的数的下标，然后进行替换   
+			{   
+				meet=binarysearch(0,tot-1,num);   
+				lis[meet+1]=num;   
+			}   
+			for(int j=0;j<tot;j++) sum+=lis[j];
+			if(sum>MAX) MAX=sum;
+		}   
+	//	for(i=0;i<tot;i++) cout<<lis[i]<<' ';
+		printf("%I64d\n",MAX);   
+	}   
+    return 0;   
+}
+
+5 1 8 1 2 3
+2 6 4
+3 5 4 1
+5 5 8 2 4 1
+5 8 4 8 4 8

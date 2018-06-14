@@ -1,0 +1,37 @@
+//hloj 1019 hdoj 1213
+#include<iostream>
+const int max=1005;
+int father[max];
+
+void connect(int x,int y)
+{
+    while(x!=father[x])
+        x=father[x];
+    while(y!=father[y])
+        y=father[y];
+    if(x!=y)
+        father[x]=y;
+}
+
+int main()
+{
+    int t,n,m,i,j,count;
+    scanf("%d",&t);
+    while(t--)
+    {
+        count=0;
+        scanf("%d%d",&n,&m);
+        for(i=1;i<=n;i++)
+            father[i]=i;
+        while(m--)
+        {
+            scanf("%d%d",&i,&j);
+            connect(i,j);
+        }
+        for(i=1;i<=n;i++)
+            if(father[i]==i)
+                count++;
+        printf("%d\n",count);
+    }
+    return 0;
+}

@@ -1,0 +1,9 @@
+struct Pos
+{
+    int x,y,step;
+    bool operator < (const Pos &p) const 
+    {
+        return p.step<step;
+    }
+}S;
+ priority_queue<Pos>Q;

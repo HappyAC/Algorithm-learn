@@ -1,0 +1,17 @@
+double sanfen()
+{
+    double x1,y1,mid1,mid2,fmid1,fmid2;
+    x1=0;
+    y1=pi/2;
+    while(fabs(y1-x1)>1e-6)
+    {
+        mid1=(x1+y1)/2;
+        mid2=(mid1+y1)/2;
+        fmid1=f(mid1);
+        fmid2=f(mid2);
+        if (fmid1>fmid2) y1=mid2;
+        else
+            x1=mid1;
+    }
+    return f((x1+y1)/2);
+}

@@ -1,0 +1,106 @@
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+const int maxn = 10010;
+
+struct Edge {
+    int v;
+    int u;
+    int length;
+};
+int n,m;
+vector<Edge> vec;
+int parent[maxn];
+bool hasCircle[maxn];
+
+bool cmp(const Edge &a, const Edge &b)
+{
+    return a.length > b.length;
+}
+
+void init()
+{
+    for (int i = 0; i <= n; i++) {
+        parent[i] = -1;
+    }
+    vec.clear();
+    memset(hasCircle, false, sizeof(hasCircle));
+}
+
+int find(int x)
+{
+    //路径压缩
+    if (parent[x] < 0) return x;
+    return parent[x] = find(parent[x]);
+}
+
+void merge(int x, int y)
+{
+    x = find(x);
+    y = find(y);
+    //加权优化
+    int tp = parent[x] + parent[y];
+    if (parent[x] < parent[y])
+    {
+        parent[x] = y;
+        parent[y] = tp;
+    }
+    else
+    {
+        parent[y] = x;
+        parent[x] = tp;
+    }
+}
+
+int doKruskal()
+{
+    int result = 0;
+    unsigned long count = vec.size();
+    for (int i = 0; i < count; i ++)
+    {
+        int x = find(vec[i].u);
+        int y = find(vec[i].v);
+        if (x != y)
+        {
+            //不同集合
+            //形成多环 略过
+            if (hasCircle[x] && hasCircle[y]) continue;
+            //形成单环
+            if (hasCircle[x] || hasCircle[y]) hasCircle[x] = hasCircle[y] = true;
+            merge(x,y);
+            //累加边
+            result += vec[i].length;
+        }
+        else
+        {
+            //相同集合 无环则构成环
+            if (!hasCircle[x]) {
+                hasCircle[x] = true;
+                result += vec[i].length;
+            }
+        }
+    }
+    
+    return result;
+}
+
+int main()
+{
+    while (scanf("%d%d",&n,&m) && (n + m))
+    {
+        init();
+        while (m --) {
+            Edge ed;
+            scanf("%d%d%d",&ed.u,&ed.v,&ed.length);
+            vec.push_back(ed);
+        }
+        sort(vec.begin(), vec.end(), cmp);
+        
+        printf("%d\n",doKruskal());
+    }
+    
+    return 0;
+}
