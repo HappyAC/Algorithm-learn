@@ -1,8 +1,0 @@
-﻿D:\Program\Visual Studio\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: 中间目录(Debug\)包含从另一个项目(【书】挑战程序设计竞赛.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
-  35-BFS.cpp
-  cap2_2.cpp
-  main.cpp
-  正在生成代码...
-main.obj : error LNK2005: "int __cdecl main_base(void)" (?main_base@@YAHXZ) 已经在 Base.obj 中定义
-MSVCRTD.lib(exe_main.obj) : error LNK2019: 无法解析的外部符号 _main，该符号在函数 "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ) 中被引用
-D:\Development\算法\Leetcode\初级算法\【书】挑战程序设计竞赛\Debug\2.1.exe : fatal error LNK1120: 1 个无法解析的外部命令
