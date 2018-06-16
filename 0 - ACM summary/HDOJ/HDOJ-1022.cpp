@@ -10,8 +10,13 @@
 
 using namespace std;
 
-bool IsPopOrder(vector<int> pushV,vector<int> popV) {
+int char2int(char a) {
+    return (int)(a - '0');
+}
+
+void IsPopOrder(vector<int> pushV,vector<int> popV) {
     stack<int> sIn;
+    vector<string> res;
     int     c
         ,   tmp
         ,   in[10]
@@ -24,50 +29,59 @@ bool IsPopOrder(vector<int> pushV,vector<int> popV) {
     for(; inIndex < c; inIndex++) {
     	while(sIn.size() != 0) {
         	if(sIn.top() != popV[outIndex]) break;
-        	//cout << out[outIndex] << " out" << endl;
+            res.push_back("out");
+        	//cout << popV[outIndex] << " out" << endl;
         	sIn.pop();
         	outIndex++;
     	}
         if(sIn.size() == 0 || sIn.top() != popV[outIndex]) {
             sIn.push(pushV[inIndex]);
-            //cout << in[inIndex] << " in" << endl;
+            res.push_back("in");
+            //cout << pushV[inIndex] << " in" << endl;
         }
     }
     
     while(sIn.size() != 0) {
     	if(sIn.top() != popV[outIndex]) break;
-    	//cout << out[outIndex] << " out" << endl;
+        res.push_back("out");
+    	//cout << popV[outIndex] << " out" << endl;
     	sIn.pop();
     	outIndex++;
 	}
-    
-    return outIndex == c;
+    if(outIndex == c) {
+        cout << "Yes." << endl;
+        for(int i = 0; i < res.size(); i++) {
+            cout << res[i] << endl;
+        }
+    } else {
+        cout << "No." << endl;
+    }
+    cout << "FINISH" << endl;
 }
 
 int main() {
     stack<int> sIn;
     int     T
     	, 	c
-    	,	tmp
         ,   inIndex
         ,   outIndex
         ;
     vector<int> 	in
     			,	out
     			;
-    cin >> T;
-    while(T--) {
-    	cin >> c;
+    char tmp;
+    while(cin >> c) {
+    	in.clear();
+        out.clear();
     	for(int i = 0; i < c; i++) {
     		cin >> tmp;
-    		in.push_back(tmp);
+    		in.push_back(char2int(tmp));
 		}
 		for(int i = 0; i < c; i++) {
     		cin >> tmp;
-    		out.push_back(tmp);
+    		out.push_back(char2int(tmp));
 		}
-        if(IsPopOrder(in, out)) cout << "Yes" << endl;
-        else cout << "No" << endl;
+        IsPopOrder(in, out); 
     }
     return 0;
 }
