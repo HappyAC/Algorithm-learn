@@ -111,9 +111,9 @@ void solve()
 		tmp.status = tmps == "in" ? 1 : -1;
 		record.push_back(tmp);
 	}
-
+	//sort by plate first, and if plate unique by time
 	sort(record.begin(), record.end(), cmpByPlate);
-	//delete ignore
+	//filter right record
 	vector<Record>::iterator it = record.begin();
 	Record temp, temp1;
 	int longerst = -1;
@@ -122,7 +122,7 @@ void solve()
 		temp = *it;
 		temp1 = *(it + 1);
 		if(temp.plate == temp1.plate && temp.status == 1 && temp1.status == -1) {
-      //pair
+      //paired!
       cars.push_back(temp);
       cars.push_back(temp1);
 			keep[temp.plate] += temp1.time - temp.time;
@@ -133,14 +133,9 @@ void solve()
 	}
 	//sort by time ASC
 	sort(cars.begin(), cars.end(), cmpByTime);
-	//show sort
-	// for (int i = 0; i < cars.size(); i++) {
-	// 	temp = cars[i];
-	// 	cout << temp.plate << " " << second2string(temp.time) << " " << temp.time << " " << temp.status << endl;
-	// }
 	vector<int> kRes(N);
 	//mock parking
-	for (int i = 0; i < cars.size(); i++) //N
+	for (int i = 0; i < cars.size(); i++)
 	{
 		if(i == 0) {
 			kRes[i] = cars[i].status;
@@ -148,7 +143,7 @@ void solve()
 			kRes[i] = kRes[i - 1] + cars[i].status;
 		}
 	}
-	//input points
+	//input points and compute sync
 	int index = 0;
 	for (int i = 0; i < K; i++)
 	{
@@ -164,7 +159,7 @@ void solve()
 		}
 		index = j;
 	}
-	//find keep
+	//find and output keep
 	pair<string, int> tempp;
 	map<string, int>::iterator hashit = keep.begin();
 	while (hashit != keep.end())
@@ -174,12 +169,12 @@ void solve()
 			cout << tempp.first << " ";
 		hashit++;
 	}
+	//output longerst
 	cout << second2string(longerst) << endl;
 }
 
 int main()
 {
 	solve();
-	system("pause");
 	return 0;
 }
