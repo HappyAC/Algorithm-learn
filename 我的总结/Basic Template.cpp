@@ -1,7 +1,11 @@
 #include<iostream>
 #include<iomanip>
+#include<string>
 #include<vector>
-#include<math>
+#include<queue>
+#include<stack>
+#include<cmath>
+#include<algorithm> 
 
 using namespace std;
 
